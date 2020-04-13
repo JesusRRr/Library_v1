@@ -1,5 +1,7 @@
 package com.hcl.library.service.rest;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,6 +29,15 @@ public class BookServiceRest {
 	public Response getBook(@PathParam("bookId") String id) {
 		
 		BookBO bookFound =BookService.getInstance().findByIsbn(id);
+		return Response.status(200).entity(bookFound).build();
+	}
+	
+	@GET
+	@Path("/allbooks")
+	@Produces("application/json")
+	public Response getAllBooks() {
+		
+		List<BookBO> bookFound =BookService.getInstance().findByLanguage("ee");
 		return Response.status(200).entity(bookFound).build();
 	}
 	

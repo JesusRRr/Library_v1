@@ -101,6 +101,14 @@ public class BookService {
 		}
 	}
 	
+	public List<BookBO> findAll(String author){
+		List<BookPO> booksFound= bookDao.findAll();
+		if(booksFound!=null) {
+			return getBusinessList(booksFound);
+		}
+		return null;
+	}
+	
 	public void changeStatus(BookBO book, StatusBook status) {
 		book.setStatus(status);
 	}
