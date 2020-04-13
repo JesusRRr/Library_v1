@@ -25,6 +25,6 @@
     <!-- Map all the URLs to the Jersey ServletContainer -->
     <servlet-mapping>
         <servlet-name>Library_v1</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/library/management/*</url-pattern>
     </servlet-mapping>
 </web-app>
