@@ -26,9 +26,9 @@ public class BookServiceRest {
 	@GET
 	@Path("/{bookId}")
 	@Produces("application/json")
-	public Response getBook(@PathParam("bookId") String id) {
+	public Response getBook(@PathParam("bookId") int id) {
 		
-		BookBO bookFound =BookService.getInstance().findByIsbn(id);
+		BookBO bookFound =BookService.getInstance().findById(id);
 		return Response.status(200).entity(bookFound).build();
 	}
 	
