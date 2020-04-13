@@ -101,7 +101,7 @@ public class BookService {
 		}
 	}
 	
-	public List<BookBO> findAll(String author){
+	public List<BookBO> findAll(){
 		List<BookPO> booksFound= bookDao.findAll();
 		if(booksFound!=null) {
 			return getBusinessList(booksFound);
