@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.hcl.library.model.bo.BookBO;
+import com.hcl.library.service.BookService;
 	
 
 	
@@ -37,6 +38,7 @@ public class Hello {
 	@Consumes("application/json")
 	public Response addBook(BookBO libro) {
 		System.out.println(libro);
+		BookService.getInstance().createBook(libro);
 		return Response.status(200).entity(1).build();
 	}
 	
