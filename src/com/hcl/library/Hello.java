@@ -39,7 +39,8 @@ public class Hello {
 	public Response addBook(BookBO libro) {
 		System.out.println(libro);
 		BookService.getInstance().createBook(libro);
-		return Response.status(200).entity(1).build();
+		BookBO bookFound =BookService.getInstance().findByIsbn(libro.getIsbn());
+		return Response.status(200).entity(bookFound.getId()).build();
 	}
 	
 	

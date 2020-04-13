@@ -4,6 +4,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -20,6 +21,15 @@ public class BookServiceRest {
 		return Response.status(200).entity(output).build();
 	}
 	
+	@GET
+	@Path("/{bookId}")
+	@Produces("application/json")
+	public Response getBook(@PathParam("bookId") String id) {
+		
+		BookBO bookFound =BookService.getInstance().findByIsbn(id);
+		return Response.status(200).entity(bookFound).build();
+	}
+	
 	@POST
 	@Path("/addBook")
 	@Produces("application/json")
@@ -27,6 +37,7 @@ public class BookServiceRest {
 	public Response addBook(BookBO libro) {
 		System.out.println(libro);
 		BookService.getInstance().createBook(libro);
-		return Response.status(200).entity(1).build();
+		BookBO bookFound =BookService.getInstance().findByIsbn(libro.getIsbn());
+		return Response.status(200).entity(bookFound.getId()).build();
 	}
 }
