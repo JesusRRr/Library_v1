@@ -6,7 +6,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class RestConfiguration extends ResourceConfig{
 	
 	public RestConfiguration() {
-		packages("com.hcl.library");
+		packages("com.hcl.library.service.rest");
 		register(JacksonFeature.class);
 	}
 }
