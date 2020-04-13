@@ -9,14 +9,25 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.hcl.library.model.bo.BookBO;
+	
 
+	
 @Path("/sayhello")
 public class Hello {
+	
 	@GET
 	@Path("/{name}")
 	public Response sayHello(@PathParam("name") String msg) {
 		String output = "Hello, " + msg + "!";
-		BookBO libro = new BookBO();
+		
+		return Response.status(200).entity(output).build();
+	}
+	
+	@GET
+	@Path("/")
+	public Response index() {
+		String output = "Hello";
+		
 		return Response.status(200).entity(output).build();
 	}
 	
@@ -24,7 +35,7 @@ public class Hello {
 	@Path("/addBook")
 	@Produces("application/json")
 	@Consumes("application/json")
-	public Response sayHello(BookBO libro) {
+	public Response addBook(BookBO libro) {
 		System.out.println(libro);
 		return Response.status(200).entity(1).build();
 	}
