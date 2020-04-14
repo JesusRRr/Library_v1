@@ -30,7 +30,7 @@ import lombok.Setter;
 @Table(name = "loan")
 public class LoanPO {
 	
-	@Getter(AccessLevel.NONE)
+	@Getter
 	@Setter(AccessLevel.NONE)
 	@Id
 	@GeneratedValue
