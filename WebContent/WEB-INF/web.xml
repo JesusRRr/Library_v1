@@ -20,6 +20,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Library_v1</servlet-name>
-    <url-pattern>/library/management/*</url-pattern>
+    <url-pattern>/v1/library/management/*</url-pattern>
   </servlet-mapping>
 </web-app>
