@@ -9,7 +9,16 @@ import com.hcl.library.model.po.LoanPO;
 public final class LoanDTO {
 
 	public static final LoanBO map(LoanPO persistenceLoan) {
-		return null;
+		LoanBO loan = new LoanBO();
+		loan.setId(persistenceLoan.getId());
+		loan.setCustomer(CustomerDto.map(persistenceLoan.getCustomer()));
+		loan.setStaff(StaffDto.map(persistenceLoan.getStaff()));
+		loan.setDateOfLoan(persistenceLoan.getDateOfLoan());
+		loan.setReturnDate(persistenceLoan.getReturnDate());
+		loan.setStatus(persistenceLoan.getStatus());
+		loan.setBooks(BookDto.mapBookListToBO(persistenceLoan.getBooks()));
+
+		return loan;
 	}
 
 	public static final LoanPO map(LoanBO businessLoan) {
