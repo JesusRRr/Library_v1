@@ -42,7 +42,7 @@ public class BookServiceRest {
 	}
 	
 	@POST
-	@Path("/addBook")
+	@Path("/newbook")
 	@Produces("application/json")
 	@Consumes("application/json")
 	public Response addBook(BookBO libro) {
