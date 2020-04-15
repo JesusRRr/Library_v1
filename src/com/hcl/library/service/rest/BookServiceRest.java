@@ -38,7 +38,7 @@ public class BookServiceRest {
 	@Produces("application/json")
 	public Response getAllBooks() {
 		
-		List<BookBO> bookFound =BookService.getInstance().findAll();
+		List<BookPO> bookFound =BookService.getInstance().findAll();
 		return Response.status(200).entity(bookFound).build();
 	}
 	

@@ -87,7 +87,7 @@ public class BookService {
 		List<BookPO> booksFound= bookDao.findAll(bookDao.criteriaOfSearching(language, "getLanguage"));
 		return getBusinessList(booksFound);
 	}
-	
+	/*
 	public List<BookBO> findByAuthor(String author){
 		AuthorPO authorFound = authorDao.find(authorDao.criteriaOfSearching(author, "getFullName"));
 		if(authorFound!=null) {
@@ -95,6 +95,7 @@ public class BookService {
 		}
 		return null;
 	}
+	*/
 	public void addAuthor(BookBO book, AuthorBO author) {
 		AuthorBO authorFound=authorService.findByName(author.getFullName());
 		if(authorFound==null) {
@@ -106,10 +107,10 @@ public class BookService {
 		}
 	}
 	
-	public List<BookBO> findAll(){
+	public List<BookPO> findAll(){
 		List<BookPO> booksFound= bookDao.findAll();
 		if(booksFound!=null) {
-			return getBusinessList(booksFound);
+			return booksFound;
 		}
 		return null;
 	}

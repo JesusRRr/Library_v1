@@ -22,8 +22,9 @@ public class AuthorPO extends PersonPO {
 
 	private String nacionality;
 	
+	/*
 	@ManyToMany(mappedBy = "authors")
 	private List<BookPO> Books = new ArrayList<>();
-	
+	*/
 	
 }
