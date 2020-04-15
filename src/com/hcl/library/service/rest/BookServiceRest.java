@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.hcl.library.model.bo.BookBO;
+import com.hcl.library.model.po.BookPO;
 import com.hcl.library.service.BookService;
 
 @Path("/books")
