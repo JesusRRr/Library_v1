@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.hcl.library.model.bo.BookBO;
+import com.hcl.library.model.po.BookPO;
 import com.hcl.library.service.BookService;
 
 @Path("/books")
@@ -28,7 +29,7 @@ public class BookServiceRest {
 	@Produces("application/json")
 	public Response getBook(@PathParam("bookId") int id) {
 		
-		BookBO bookFound =BookService.getInstance().findById(id);
+		BookPO bookFound =BookService.getInstance().findById(id);
 		return Response.status(200).entity(bookFound).build();
 	}
 	
@@ -37,7 +38,7 @@ public class BookServiceRest {
 	@Produces("application/json")
 	public Response getAllBooks() {
 		
-		List<BookBO> bookFound =BookService.getInstance().findAll();
+		List<BookPO> bookFound =BookService.getInstance().findAll();
 		return Response.status(200).entity(bookFound).build();
 	}
 	

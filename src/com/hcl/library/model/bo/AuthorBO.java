@@ -12,12 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AuthorBO extends PersonBO{
 	private String nacionality;
-	private List<BookBO> Books = new ArrayList<>();
-	@Override
-	public String toString() {
-		return "AuthorBO [nacionality=" +", toString()=" + super.toString() + "]";
-	}
-	
-	
-	
+	//private List<BookBO> Books = new ArrayList<>();
+
 }
