@@ -29,7 +29,7 @@ public class BookServiceRest {
 	@Produces("application/json")
 	public Response getBook(@PathParam("bookId") int id) {
 		
-		BookBO bookFound =BookService.getInstance().findById(id);
+		BookPO bookFound =BookService.getInstance().findById(id);
 		return Response.status(200).entity(bookFound).build();
 	}
 	

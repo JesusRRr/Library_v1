@@ -49,9 +49,10 @@ public class BookService {
 		bookDao.update(persistenceBook);
 	}
 	
-	public BookBO findById(int id) {
+	public BookPO findById(int id) {
 		BookPO bookFound=bookDao.findById(id);
-		return getBusinessBook(bookFound);
+		
+		return bookFound;
 	}
 
 	public BookBO findByName(String name) {
