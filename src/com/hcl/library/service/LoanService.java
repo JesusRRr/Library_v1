@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import javax.persistence.NoResultException;
 
 import com.hcl.library.dao.LoanDao;
+import com.hcl.library.dto.BookDto;
 import com.hcl.library.dto.CustomerDto;
 import com.hcl.library.dto.LoanDTO;
 import com.hcl.library.exceptions.CustomerHasActiveLoanException;
@@ -79,7 +80,7 @@ public class LoanService {
 	}
 
 	private List<BookBO> removeBooksNotAvailableToLoan(List<BookBO> bookList) {
-		return bookList.stream().map(book -> bookService.findById(book.getId()))
+		return bookList.stream().map(book -> BookDto.map(bookService.findById(book.getId())))
 				.filter(book -> bookService.findById(book.getId()).getStatus() == StatusBook.AVAILABLE)
 				.collect(Collectors.toList());
 	}
@@ -104,7 +105,7 @@ public class LoanService {
 		loanBO.setStatus(StatusLoan.Active);
 		loanBO.setDateOfLoan(LocalDate.now());
 		loanBO.setReturnDate(LocalDate.now().plusDays(10));
-		loanBO.setBooks(loan.getBooks().stream().map(book -> bookService.findById(book)).collect(Collectors.toList()));
+		loanBO.setBooks(loan.getBooks().stream().map(book -> BookDto.map(bookService.findById(book))).collect(Collectors.toList()));
 
 		return loanBO;
 
