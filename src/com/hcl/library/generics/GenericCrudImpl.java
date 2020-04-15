@@ -54,7 +54,6 @@ public abstract class GenericCrudImpl<T> implements IGenericCrud<T> {
 		em.getTransaction().begin();
 		em.merge(entity);
 		em.getTransaction().commit();
-		em.close();
 	
 		return entity;		
 	}
