@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import com.hcl.library.exceptions.InvalidFieldException;
 import com.hcl.library.model.bo.BookBO;
 import com.hcl.library.model.po.BookPO;
 import com.hcl.library.service.BookService;
@@ -48,8 +49,13 @@ public class BookServiceRest {
 	@Consumes("application/json")
 	public Response addBook(BookBO libro) {
 		System.out.println(libro);
-		BookService.getInstance().createBook(libro);
-		BookBO bookFound =BookService.getInstance().findByIsbn(libro.getIsbn());
-		return Response.status(201).entity(bookFound.getId()).build();
+		try {
+			BookService.getInstance().createBook(libro);
+			BookBO bookFound =BookService.getInstance().findByIsbn(libro.getIsbn());
+			return Response.status(201).entity(bookFound.getId()).build();
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			return Response.status(400).entity(e).build();
+		}
 	}
 }
