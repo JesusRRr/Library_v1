@@ -32,17 +32,7 @@ public class Hello {
 		return Response.status(200).entity(output).build();
 	}
 	
-	@POST
-	@Path("/addBook")
-	@Produces("application/json")
-	@Consumes("application/json")
-	public Response addBook(BookBO libro) {
-		System.out.println(libro);
-		BookService.getInstance().createBook(libro);
-		BookBO bookFound =BookService.getInstance().findByIsbn(libro.getIsbn());
-		return Response.status(200).entity(bookFound.getId()).build();
-	}
-	
+
 	
 
 }
