@@ -50,9 +50,9 @@ public class BookServiceRest {
 	public Response addBook(BookBO libro) {
 		System.out.println(libro);
 		try {
-			BookService.getInstance().createBook(libro);
+			boolean isBookCreated =BookService.getInstance().createBook(libro);
 			BookBO bookFound =BookService.getInstance().findByIsbn(libro.getIsbn());
-			return Response.status(201).entity(bookFound.getId()).build();
+			return Response.status(201).entity("{\"id\": "+bookFound.getId()+"}").build();
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 			return Response.status(400).entity(e).build();

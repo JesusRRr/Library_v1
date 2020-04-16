@@ -5,6 +5,7 @@ import java.util.List;
 import com.hcl.library.dao.AuthorDao;
 import com.hcl.library.dao.BookDao;
 import com.hcl.library.dto.BookDto;
+import com.hcl.library.exceptions.InvalidFieldException;
 import com.hcl.library.model.bo.AuthorBO;
 import com.hcl.library.model.bo.BookBO;
 import com.hcl.library.model.enums.StatusBook;
@@ -31,7 +32,7 @@ public class BookService {
 		return instance;
 	}
 
-	public boolean createBook(BookBO book) {
+	public boolean createBook(BookBO book) throws InvalidFieldException{
 		BookPO persistenceBook=getPersistenceBook(book);
 		BookBO bookFound = findByIsbn(persistenceBook.getIsbn());
 		if (bookFound == null) {
