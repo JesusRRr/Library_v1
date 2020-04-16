@@ -31,6 +31,9 @@ public class BookServiceRest {
 	public Response getBook(@PathParam("bookId") int id) {
 		
 		BookPO bookFound =BookService.getInstance().findById(id);
+		if(bookFound==null) {
+			return Response.status(404).entity("{\"code\":\"404\",\"message\":\"Book Not Found\"}").build();
+		}
 		return Response.status(200).entity(bookFound).build();
 	}
 	
