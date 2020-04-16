@@ -50,6 +50,6 @@ public class BookServiceRest {
 		System.out.println(libro);
 		BookService.getInstance().createBook(libro);
 		BookBO bookFound =BookService.getInstance().findByIsbn(libro.getIsbn());
-		return Response.status(200).entity(bookFound.getId()).build();
+		return Response.status(201).entity(bookFound.getId()).build();
 	}
 }
