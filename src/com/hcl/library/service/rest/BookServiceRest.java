@@ -72,7 +72,8 @@ public class BookServiceRest {
 			return Response.status(201).entity("{\"id\": "+bookFound.getId()+"}").build();
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
-			return Response.status(400).entity(e).build();
+			return Response.status(500).entity("{\"code\":\"500\",\"message\":\" "+ e.getMessage()+"\"}").build();
+			
 		}
 	}
 }
