@@ -51,8 +51,13 @@ public class BookServiceRest {
 	@Produces("application/json")
 	public Response getAllBooks() {
 		
-		List<BookPO> bookFound =BookService.getInstance().findAll();
-		return Response.status(200).entity(bookFound).build();
+		try {
+			List<BookPO> bookFound =BookService.getInstance().findAll();
+			return Response.status(200).entity(bookFound).build();
+		}catch(Exception e) {
+			return Response.status(500).entity("{\"code\":\"500\",\"message\":\"Unhandled exception in service\"}").build();
+		}
+		
 	}
 	
 	@POST
