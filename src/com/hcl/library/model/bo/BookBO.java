@@ -15,7 +15,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class BookBO {
+public class BookBO{
 	private int id;
 	private String name;
 	private String isbn;
