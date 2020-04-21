@@ -10,7 +10,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import com.hcl.library.dto.LoanDTO;
 import com.hcl.library.exceptions.CustomerHasActiveLoanException;
+import com.hcl.library.model.bo.LoanBO;
 import com.hcl.library.model.po.LoanPO;
 import com.hcl.library.service.BookService;
 import com.hcl.library.service.LoanService;
@@ -38,9 +40,10 @@ public class LoanServiceRest {
 	
 	@GET
 	@Path("/all-loans")
-	@Produces("aplication/json")
+	@Produces("application/json")
 	public Response retriveAllLoans() {
-		List<LoanPO> loanFound = LoanService.getLoanService().findAll();
+		List<LoanBO> loanFound = service.findAll();
+		
 		return Response.status(200).entity(loanFound).build();
 		
 	}

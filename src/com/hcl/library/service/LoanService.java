@@ -110,10 +110,10 @@ public class LoanService {
 		return loanBO;
 
 	}
-	public List<LoanPO> findAll(){
+	public List<LoanBO> findAll(){
 		List<LoanPO> loanFound=loanDao.findAll();
 		if(loanFound!=null) {
-			return loanFound;
+			return LoanDTO.mapLoanListToBO(loanFound);
 		}
 		return null;
 	}
