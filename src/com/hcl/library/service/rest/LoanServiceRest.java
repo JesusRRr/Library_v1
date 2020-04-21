@@ -7,10 +7,13 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import com.hcl.library.dto.LoanDTO;
 import com.hcl.library.exceptions.CustomerHasActiveLoanException;
+import com.hcl.library.model.bo.LoanBO;
 import com.hcl.library.model.po.LoanPO;
 import com.hcl.library.service.BookService;
 import com.hcl.library.service.LoanService;
@@ -38,13 +41,28 @@ public class LoanServiceRest {
 	
 	@GET
 	@Path("/all-loans")
-	@Produces("aplication/json")
+	@Produces("application/json")
 	public Response retriveAllLoans() {
-		List<LoanPO> loanFound = LoanService.getLoanService().findAll();
+		List<LoanBO> loanFound = service.findAll();
+		
 		return Response.status(200).entity(loanFound).build();
 		
 	}
 	
+	
+	@GET
+	@Path("{id_loan}")
+	@Produces("application/json")
+	public Response getLoanDetails(@PathParam("id_loan") int id) {
+		LoanBO loan;
+		try {
+			loan = service.getLoanDetails(id);
+		}catch(Exception e) {
+			return Response.status(400).entity("{\"error\": \""+e.getMessage()+"\"}").build();
+		}
+		
+		return Response.status(200).entity(loan).build();
+	}
 	
 
 
