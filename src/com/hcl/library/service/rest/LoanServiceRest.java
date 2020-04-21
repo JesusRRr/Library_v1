@@ -7,6 +7,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -48,6 +49,20 @@ public class LoanServiceRest {
 		
 	}
 	
+	
+	@GET
+	@Path("{id_loan}")
+	@Produces("application/json")
+	public Response getLoanDetails(@PathParam("id_loan") int id) {
+		LoanBO loan;
+		try {
+			loan = service.getLoanDetails(id);
+		}catch(Exception e) {
+			return Response.status(400).entity("{\"error\": \""+e.getMessage()+"\"}").build();
+		}
+		
+		return Response.status(200).entity(loan).build();
+	}
 	
 
 

@@ -117,5 +117,9 @@ public class LoanService {
 		}
 		return null;
 	}
+	
+	public LoanBO getLoanDetails(int id) {
+		return LoanDTO.map(loanDao.findById(id));
+	}
 
 }
