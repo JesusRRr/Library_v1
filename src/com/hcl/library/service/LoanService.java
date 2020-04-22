@@ -43,16 +43,28 @@ public class LoanService {
 		return loanService == null ? loanService = new LoanService() : loanService;
 	}
 
+	public LoanBO getLoanDetails(int id) {
+		return LoanDTO.map(loanDao.findById(id));
+	}
+
+	public List<LoanBO> findAll() {
+		List<LoanPO> loanFound = loanDao.findAll();
+		if (loanFound != null) {
+			return LoanDTO.mapLoanListToBO(loanFound);
+		}
+		return null;
+	}
+
 	public int createLoan(Loan loan) throws LoanException {
 		LoanBO loanBO = fillAllLoanInfoRequired(loan);
-		
+
 		findActiveLoanByCustomerId(loanBO.getCustomer().getId());
-		
+
 		checkLoanFields(loanBO);
-		
+
 		loanBO.setBooks(removeBooksNotAvailableToLoan(loanBO.getBooks()));
 		if (loan.getBooks().size() > 0) {
-			LoanPO newLoan = getPersistenceObject(loanBO);
+			LoanPO newLoan = LoanDTO.map(loanBO);
 			loanDao.create(newLoan);
 			loanBooks(loanBO.getBooks());
 
@@ -62,7 +74,7 @@ public class LoanService {
 
 	}
 
-	public void returnLoan(ReturnLoan returnLoan) throws CustomerLoanException {
+	public void returnLoan(ReturnLoan returnLoan) throws LoanException {
 		LoanPO loan = findActiveLoanByCustomerId(returnLoan.getIdLoan());
 		BookPO bookToReturn = bookService.findById(returnLoan.getIdBook());
 		if (loan.getBooks().contains(bookToReturn)) {
@@ -88,10 +100,6 @@ public class LoanService {
 		}
 		return loan;
 
-	}
-
-	private LoanPO getPersistenceObject(LoanBO loan) {
-		return LoanDTO.map(loan);
 	}
 
 	private List<BookBO> removeBooksNotAvailableToLoan(List<BookBO> bookList) {
@@ -131,18 +139,6 @@ public class LoanService {
 
 		return loanBO;
 
-	}
-
-	public List<LoanBO> findAll() {
-		List<LoanPO> loanFound = loanDao.findAll();
-		if (loanFound != null) {
-			return LoanDTO.mapLoanListToBO(loanFound);
-		}
-		return null;
-	}
-
-	public LoanBO getLoanDetails(int id) {
-		return LoanDTO.map(loanDao.findById(id));
 	}
 
 }

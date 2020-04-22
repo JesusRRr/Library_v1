@@ -45,17 +45,22 @@ public class LoanServiceRest {
 		} catch (Exception e) {
 			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
 		}
-		
-		return Response.status(201).entity("{\"id\": \"" + loan.getIdLoan() + "\"}").build(); 
+
+		return Response.status(201).entity("{\"id\": \"" + loan.getIdLoan() + "\"}").build();
 	}
 
 	@GET
 	@Path("/all-loans")
 	@Produces("application/json")
 	public Response retriveAllLoans() {
-		List<LoanBO> loanFound = service.findAll();
+		List<LoanBO> loans;
+		try {
+			loans = service.findAll();
+		} catch (Exception e) {
+			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+		}
 
-		return Response.status(200).entity(loanFound).build();
+		return Response.status(200).entity(loans).build();
 
 	}
 
