@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.NoResultException;
+import javax.ws.rs.core.Response.Status;
 
 import com.hcl.library.dao.LoanDao;
 import com.hcl.library.dto.BookDto;
@@ -16,9 +17,11 @@ import com.hcl.library.model.bo.BookBO;
 import com.hcl.library.model.bo.LoanBO;
 import com.hcl.library.model.enums.StatusBook;
 import com.hcl.library.model.enums.StatusLoan;
+import com.hcl.library.model.po.BookPO;
 import com.hcl.library.model.po.CustomerPO;
 import com.hcl.library.model.po.LoanPO;
 import com.hcl.library.service.rest.request.Loan;
+import com.hcl.library.service.rest.request.ReturnLoan;
 
 public class LoanService {
 	private static LoanService loanService;
@@ -57,11 +60,21 @@ public class LoanService {
 		throw new CustomerHasActiveLoanException("This customer already has an active loan");
 	}
 
-	public boolean returnLoan(String customerCurp) {
-		CustomerPO customer = customerService.findByCurp(customerCurp);
-		LoanPO loan = findActiveLoanByCustomerId(customer.getId());
-
-		return false;
+	public void returnLoan(ReturnLoan returnLoan) {
+		LoanPO loan = findActiveLoanByCustomerId(returnLoan.getIdLoan());
+		BookPO bookToReturn = bookService.findById(returnLoan.getIdBook());
+		if(loan.getBooks().contains(bookToReturn)) {
+			bookToReturn.setStatus(StatusBook.AVAILABLE);
+			bookService.updateBook(bookToReturn);
+			if(loan.getBooks().size() == 1) {
+				loan.setStatus(StatusLoan.Finished);
+				updateLoan(loan);
+			}
+		}
+	}
+	
+	private void updateLoan(LoanPO loan) {
+		loanDao.update(loan);
 	}
 
 	private LoanPO findActiveLoanByCustomerId(int id) {
@@ -97,6 +110,7 @@ public class LoanService {
 			bookService.updateBook(book);
 		}
 	}
+	
 
 	private LoanBO fillAllLoanInfoRequired(Loan loan) {
 		LoanBO loanBO = new LoanBO();

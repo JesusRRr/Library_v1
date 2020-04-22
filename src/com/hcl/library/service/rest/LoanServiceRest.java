@@ -28,7 +28,7 @@ public class LoanServiceRest {
 		int id;
 		try {
 			id = service.createLoan(loanRequest);
-		} catch (CustomerHasActiveLoanException e) {
+		} catch (Exception e) {
 			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
 		}
 
@@ -40,7 +40,13 @@ public class LoanServiceRest {
 	@Produces("application/json")
 	@Consumes("application/json")
 	public Response returnLoan(ReturnLoan loan) {
-		return Response.status(200).entity(loan).build();
+		try {
+			service.returnLoan(loan);
+		} catch (Exception e) {
+			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+		}
+		
+		return Response.status(201).entity("{\"id\": \"" + loan.getIdLoan() + "\"}").build(); 
 	}
 
 	@GET
