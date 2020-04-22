@@ -10,7 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import com.hcl.library.exceptions.CustomerHasActiveLoanException;
+import com.hcl.library.exceptions.CustomerLoanException;
 import com.hcl.library.model.bo.LoanBO;
 import com.hcl.library.service.LoanService;
 import com.hcl.library.service.rest.request.Loan;
