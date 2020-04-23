@@ -50,6 +50,10 @@ public class BookService {
 		bookDao.update(persistenceBook);
 	}
 	
+	public void updateBook(BookPO book) {
+		bookDao.update(book);
+	}
+	
 	public BookPO findById(int id) {
 		BookPO bookFound=bookDao.findById(id);
 		

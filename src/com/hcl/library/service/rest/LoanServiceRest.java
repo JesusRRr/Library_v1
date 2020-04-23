@@ -1,6 +1,5 @@
 package com.hcl.library.service.rest;
 
-
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -11,18 +10,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import com.hcl.library.dto.LoanDTO;
-import com.hcl.library.exceptions.CustomerHasActiveLoanException;
+import com.hcl.library.exceptions.CustomerLoanException;
 import com.hcl.library.model.bo.LoanBO;
-import com.hcl.library.model.po.LoanPO;
-import com.hcl.library.service.BookService;
 import com.hcl.library.service.LoanService;
 import com.hcl.library.service.rest.request.Loan;
+import com.hcl.library.service.rest.request.ReturnLoan;
 
 @Path("/loans")
 public class LoanServiceRest {
 	LoanService service = LoanService.getLoanService();
-	
 
 	@POST
 	@Path("/newLoan")
@@ -32,24 +28,42 @@ public class LoanServiceRest {
 		int id;
 		try {
 			id = service.createLoan(loanRequest);
-		}catch(CustomerHasActiveLoanException e) {
-			return Response.status(400).entity("{\"error\": \""+e.getMessage()+"\"}").build();
+		} catch (Exception e) {
+			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
 		}
-		
-		return Response.status(201).entity("{\"id\": \""+id+"\"}").build();
+
+		return Response.status(201).entity("{\"id\": \"" + id + "\"}").build();
 	}
-	
+
+	@POST
+	@Path("/returnloan")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response returnLoan(ReturnLoan loan) {
+		try {
+			service.returnLoan(loan);
+		} catch (Exception e) {
+			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+		}
+
+		return Response.status(201).entity("{\"id\": \"" + loan.getIdLoan() + "\"}").build();
+	}
+
 	@GET
 	@Path("/all-loans")
 	@Produces("application/json")
 	public Response retriveAllLoans() {
-		List<LoanBO> loanFound = service.findAll();
-		
-		return Response.status(200).entity(loanFound).build();
-		
+		List<LoanBO> loans;
+		try {
+			loans = service.findAll();
+		} catch (Exception e) {
+			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+		}
+
+		return Response.status(200).entity(loans).build();
+
 	}
-	
-	
+
 	@GET
 	@Path("{id_loan}")
 	@Produces("application/json")
@@ -57,13 +71,11 @@ public class LoanServiceRest {
 		LoanBO loan;
 		try {
 			loan = service.getLoanDetails(id);
-		}catch(Exception e) {
-			return Response.status(400).entity("{\"error\": \""+e.getMessage()+"\"}").build();
+		} catch (Exception e) {
+			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
 		}
-		
+
 		return Response.status(200).entity(loan).build();
 	}
-	
-
 
 }

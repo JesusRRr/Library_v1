@@ -1,11 +1,11 @@
 package com.hcl.library.exceptions;
 
-public class CustomerHasActiveLoanException extends Exception {
+public class CustomerLoanException extends LoanException {
 
 
 	private static final long serialVersionUID = -1176151710981499439L;
 
-	public CustomerHasActiveLoanException(String errorMessage) {
+	public CustomerLoanException(String errorMessage) {
 		super(errorMessage);
 	}
 }
