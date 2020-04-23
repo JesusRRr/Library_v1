@@ -58,33 +58,71 @@ public class LoanService {
 	public int createLoan(Loan loan) throws LoanException {
 		LoanBO loanBO = fillAllLoanInfoRequired(loan);
 
-		findActiveLoanByCustomerId(loanBO.getCustomer().getId());
+		if (!customerHasActiveLoan(loanBO.getCustomer().getId())) {
+			checkLoanFields(loanBO);
+			loanBO.setBooks(removeBooksNotAvailableToLoan(loanBO.getBooks()));
+			if (loan.getBooks().size() > 0) {
+				LoanPO newLoan = LoanDTO.map(loanBO);
+				loanDao.create(newLoan);
+				loanBooks(loanBO.getBooks());
 
-		checkLoanFields(loanBO);
-
-		loanBO.setBooks(removeBooksNotAvailableToLoan(loanBO.getBooks()));
-		if (loan.getBooks().size() > 0) {
-			LoanPO newLoan = LoanDTO.map(loanBO);
-			loanDao.create(newLoan);
-			loanBooks(loanBO.getBooks());
-
+			}
 		}
 
 		return findActiveLoanByCustomerId(loanBO.getCustomer().getId()).getId();
 
 	}
 
+	private boolean customerHasActiveLoan(int idCustomer) throws CustomerLoanException {
+		try {
+			findActiveLoanByCustomerId(idCustomer);
+		} catch (CustomerLoanException e) {
+			return false;
+		}
+		throw new CustomerLoanException("This customer with id: " + idCustomer + " already has an active loan");
+	}
+
 	public void returnLoan(ReturnLoan returnLoan) throws LoanException {
-		LoanPO loan = findActiveLoanByCustomerId(returnLoan.getIdLoan());
+		LoanPO loan = loanDao.findById(returnLoan.getIdLoan());
 		BookPO bookToReturn = bookService.findById(returnLoan.getIdBook());
-		if (loan.getBooks().contains(bookToReturn)) {
-			bookToReturn.setStatus(StatusBook.AVAILABLE);
-			bookService.updateBook(bookToReturn);
-			if (loan.getBooks().size() == 1) {
-				loan.setStatus(StatusLoan.Finished);
-				updateLoan(loan);
+
+		if (bookToReturn != null) {
+			boolean listContainsBook = loan.getBooks().stream().anyMatch(book -> book.getId() == bookToReturn.getId());
+
+			if (listContainsBook) {
+				returnBookLoaned(bookToReturn);
+
+				if (!isBookMissingToReturn(loan.getBooks())) {
+					finishLoan(loan);
+				}
+			} else {
+				throw new LoanException("The loan does not contain any book with id: " + returnLoan.getIdBook());
+			}
+		} else {
+			throw new LoanException("The book with the id: " + returnLoan.getIdBook() + " doesn't exist");
+		}
+
+	}
+
+	private void returnBookLoaned(BookPO book) {
+		book.setStatus(StatusBook.AVAILABLE);
+		bookService.updateBook(book);
+	}
+
+	private boolean isBookMissingToReturn(List<BookPO>books) throws CustomerLoanException {
+		for(BookPO book : books ) {
+			BookPO b = bookService.findById(book.getId());
+			if(b.getStatus() == StatusBook.LOANED) {
+				return true;
 			}
 		}
+		return false;
+
+	}
+
+	private void finishLoan(LoanPO loan) {
+		loan.setStatus(StatusLoan.Finished);
+		updateLoan(loan);
 	}
 
 	private void updateLoan(LoanPO loan) {
@@ -96,8 +134,9 @@ public class LoanService {
 		try {
 			loan = loanDao.findActiveLoanByCustomerId(id);
 		} catch (NoResultException e) {
-			throw new CustomerLoanException("This customer already has an active loan");
+			throw new CustomerLoanException("This customer does not have an active loan");
 		}
+
 		return loan;
 
 	}
