@@ -17,7 +17,7 @@ import com.hcl.library.service.rest.request.Loan;
 import com.hcl.library.service.rest.request.ReturnLoan;
 
 @Path("/loans")
-public class LoanServiceRest {
+public class LoanController {
 	LoanService service = LoanService.getLoanService();
 
 	@POST
