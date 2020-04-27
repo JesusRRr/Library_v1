@@ -12,6 +12,7 @@ import com.hcl.library.dao.LoanDao;
 import com.hcl.library.dto.BookDto;
 import com.hcl.library.dto.CustomerDto;
 import com.hcl.library.dto.LoanDTO;
+import com.hcl.library.exceptions.BookUnavailableToLoanException;
 import com.hcl.library.exceptions.CustomerLoanException;
 import com.hcl.library.exceptions.LoanEmptyFieldException;
 import com.hcl.library.exceptions.LoanException;
@@ -57,15 +58,12 @@ public class LoanService {
 
 	public int createLoan(Loan loan) throws LoanException {
 		LoanBO loanBO = fillAllLoanInfoRequired(loan);
-
-		if (!customerHasActiveLoan(loanBO.getCustomer().getId())) {
+		if (loan.getBooks().size() > 0) {
 			checkLoanFields(loanBO);
-			loanBO.setBooks(removeBooksNotAvailableToLoan(loanBO.getBooks()));
-			if (loan.getBooks().size() > 0) {
+			if (!customerHasActiveLoan(loanBO.getCustomer().getId())) {
 				LoanPO newLoan = LoanDTO.map(loanBO);
 				loanDao.create(newLoan);
 				loanBooks(loanBO.getBooks());
-
 			}
 		}
 
@@ -109,10 +107,10 @@ public class LoanService {
 		bookService.updateBook(book);
 	}
 
-	private boolean isBookMissingToReturn(List<BookPO>books) throws CustomerLoanException {
-		for(BookPO book : books ) {
+	private boolean isBookMissingToReturn(List<BookPO> books) throws CustomerLoanException {
+		for (BookPO book : books) {
 			BookPO b = bookService.findById(book.getId());
-			if(b.getStatus() == StatusBook.LOANED) {
+			if (b.getStatus() == StatusBook.LOANED) {
 				return true;
 			}
 		}
@@ -141,22 +139,24 @@ public class LoanService {
 
 	}
 
-	private List<BookBO> removeBooksNotAvailableToLoan(List<BookBO> bookList) {
-		return bookList.stream().map(book -> BookDto.map(bookService.findById(book.getId())))
-				.filter(book -> bookService.findById(book.getId()).getStatus() == StatusBook.AVAILABLE)
-				.collect(Collectors.toList());
-	}
-
 	private void checkLoanFields(LoanBO loan) throws LoanException {
 		if (loanHasNulls(loan)) {
 			throw new LoanEmptyFieldException();
 		}
+		if (containsUnavailableBooks(loan.getBooks())) {
+			throw new BookUnavailableToLoanException("This loan contains one or more books unavailable to loan");
+		}
+
 	}
 
 	private boolean loanHasNulls(LoanBO loan) {
 		return Stream
 				.of(loan.getStaff(), loan.getCustomer(), loan.getDateOfLoan(), loan.getReturnDate(), loan.getBooks())
 				.anyMatch(x -> x == null);
+	}
+
+	private boolean containsUnavailableBooks(List<BookBO> bookList) {
+		return bookList.stream().anyMatch(book -> book.getStatus() != StatusBook.AVAILABLE);
 	}
 
 	private void loanBooks(List<BookBO> books) {
@@ -166,15 +166,20 @@ public class LoanService {
 		}
 	}
 
-	private LoanBO fillAllLoanInfoRequired(Loan loan) {
+	private LoanBO fillAllLoanInfoRequired(Loan loan) throws LoanException {
 		LoanBO loanBO = new LoanBO();
-		loanBO.setCustomer(CustomerDto.map(customerService.findByCurp(loan.getCustomerCurp())));
-		loanBO.setStaff(staffService.findByUserName(loan.getStaffUsername()));
+		try {
+			loanBO.setCustomer(CustomerDto.map(customerService.findByCurp(loan.getCustomerCurp())));
+			loanBO.setStaff(staffService.findByUserName(loan.getStaffUsername()));
+			loanBO.setBooks(loan.getBooks().stream().map(book -> BookDto.map(bookService.findById(book)))
+					.collect(Collectors.toList()));
+		} catch (Exception e) {
+			throw new LoanException(e.getMessage());
+		}
+
 		loanBO.setStatus(StatusLoan.Active);
 		loanBO.setDateOfLoan(LocalDate.now());
 		loanBO.setReturnDate(LocalDate.now().plusDays(10));
-		loanBO.setBooks(loan.getBooks().stream().map(book -> BookDto.map(bookService.findById(book)))
-				.collect(Collectors.toList()));
 
 		return loanBO;
 
