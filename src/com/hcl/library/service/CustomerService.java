@@ -7,6 +7,7 @@ import com.hcl.library.dao.CustomerDao;
 import com.hcl.library.dto.AuthorDto;
 import com.hcl.library.dto.BookDto;
 import com.hcl.library.dto.CustomerDto;
+import com.hcl.library.exceptions.CustomerDoesNotExistsException;
 import com.hcl.library.model.bo.AuthorBO;
 import com.hcl.library.model.bo.BookBO;
 import com.hcl.library.model.bo.CustomerBO;
@@ -60,8 +61,12 @@ public class CustomerService {
 		return getBusinessCustomer(customerFound);
 	}
 	
-	public CustomerPO findByCurp(String curp) {
-		return customerDao.find(customerDao.criteriaOfSearching(curp, "getCurp"));
+	public CustomerPO findByCurp(String curp)throws CustomerDoesNotExistsException {
+		CustomerPO customer = customerDao.find(customerDao.criteriaOfSearching(curp, "getCurp"));
+		if(customer == null) {
+			throw new CustomerDoesNotExistsException("The customer with curp: "+curp+" does not exists");
+		}
+		return customer;
 	}
 	
 	private CustomerBO getBusinessCustomer(CustomerPO customer) {
