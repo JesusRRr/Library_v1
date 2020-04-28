@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.hcl.library.exceptions.CustomerLoanException;
+import com.hcl.library.exceptions.LoanNotFoundException;
 import com.hcl.library.model.bo.LoanBO;
 import com.hcl.library.service.LoanService;
 import com.hcl.library.service.rest.request.Loan;
@@ -71,8 +72,8 @@ public class LoanController {
 		LoanBO loan;
 		try {
 			loan = service.getLoanDetails(id);
-		} catch (Exception e) {
-			return Response.status(400).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+		} catch (LoanNotFoundException e) {
+			return Response.status(404).entity("{\"error\": \"" + e.getMessage() + "\"}").build();
 		}
 
 		return Response.status(200).entity(loan).build();

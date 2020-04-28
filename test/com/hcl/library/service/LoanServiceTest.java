@@ -18,6 +18,7 @@ import com.hcl.library.exceptions.BookUnavailableToLoanException;
 import com.hcl.library.exceptions.CustomerDoesNotExistsException;
 import com.hcl.library.exceptions.CustomerLoanException;
 import com.hcl.library.exceptions.LoanException;
+import com.hcl.library.exceptions.LoanNotFoundException;
 import com.hcl.library.model.bo.LoanBO;
 import com.hcl.library.model.bo.StaffBO;
 import com.hcl.library.model.enums.StatusBook;
@@ -25,6 +26,7 @@ import com.hcl.library.model.po.AddressPO;
 import com.hcl.library.model.po.BookPO;
 import com.hcl.library.model.po.CustomerPO;
 import com.hcl.library.model.po.LoanPO;
+import com.hcl.library.model.po.StaffPO;
 import com.hcl.library.service.rest.request.Loan;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,7 +52,27 @@ public class LoanServiceTest {
 		MockitoAnnotations.initMocks(this);
 		when(loanDao.create(any(LoanPO.class))).thenReturn(true);
 	}
+	
+	@Test
+	public void testGetLoanDetails()throws Exception {
+		LoanPO loan = new LoanPO();
+		loan.setCustomer(createTestCustomer());
+		loan.setStaff(new StaffPO());
+		
+		when(loanDao.findById(any(Integer.class))).thenReturn(loan);
+		
+		assertNotNull(loanService.getLoanDetails(0));
+		
+	}
+	
+	@Test(expected = LoanNotFoundException.class)
+	public void testGetNonExistentLoanDetails()throws Exception {
+		when(loanDao.findById(any(Integer.class))).thenReturn(null);
+		
+		loanService.getLoanDetails(0);
+	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateNewLoan() throws Exception {
 		Loan loan = new Loan();
@@ -67,6 +89,7 @@ public class LoanServiceTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test(expected = LoanException.class)
 	public void testCreateLoanNonExistingCustomer() throws Exception {
 

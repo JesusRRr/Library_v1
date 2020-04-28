@@ -16,6 +16,7 @@ import com.hcl.library.exceptions.BookUnavailableToLoanException;
 import com.hcl.library.exceptions.CustomerLoanException;
 import com.hcl.library.exceptions.LoanEmptyFieldException;
 import com.hcl.library.exceptions.LoanException;
+import com.hcl.library.exceptions.LoanNotFoundException;
 import com.hcl.library.model.bo.BookBO;
 import com.hcl.library.model.bo.LoanBO;
 import com.hcl.library.model.enums.StatusBook;
@@ -44,8 +45,16 @@ public class LoanService {
 		return loanService == null ? loanService = new LoanService() : loanService;
 	}
 
-	public LoanBO getLoanDetails(int id) {
-		return LoanDTO.map(loanDao.findById(id));
+	public LoanBO getLoanDetails(int id)throws LoanNotFoundException {
+		return LoanDTO.map(findById(id));
+	}
+
+	private LoanPO findById(int id) throws LoanNotFoundException {
+		LoanPO loan = loanDao.findById(id);
+		if (loan == null) {
+			throw new LoanNotFoundException("The loan with id:" + id + " does not exists");
+		}
+		return loan;
 	}
 
 	public List<LoanBO> findAll() {
