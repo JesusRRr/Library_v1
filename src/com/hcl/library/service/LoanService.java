@@ -71,13 +71,14 @@ public class LoanService {
 
 	}
 
-	private boolean customerHasActiveLoan(int idCustomer) throws CustomerLoanException {
+	private boolean customerHasActiveLoan(int idCustomer) {
+		boolean hasActiveLoan = true;
 		try {
 			findActiveLoanByCustomerId(idCustomer);
 		} catch (CustomerLoanException e) {
-			return false;
+			hasActiveLoan = false;
 		}
-		throw new CustomerLoanException("This customer with id: " + idCustomer + " already has an active loan");
+		return hasActiveLoan;
 	}
 
 	public void returnLoan(ReturnLoan returnLoan) throws LoanException {
@@ -129,11 +130,7 @@ public class LoanService {
 
 	private LoanPO findActiveLoanByCustomerId(int id) throws CustomerLoanException {
 		LoanPO loan;
-		try {
-			loan = loanDao.findActiveLoanByCustomerId(id);
-		} catch (NoResultException e) {
-			throw new CustomerLoanException("This customer does not have an active loan");
-		}
+		loan = loanDao.findActiveLoanByCustomerId(id);
 
 		return loan;
 
