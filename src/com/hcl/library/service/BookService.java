@@ -5,6 +5,7 @@ import java.util.List;
 import com.hcl.library.dao.AuthorDao;
 import com.hcl.library.dao.BookDao;
 import com.hcl.library.dto.BookDto;
+import com.hcl.library.exceptions.InvalidCharacterException;
 import com.hcl.library.exceptions.InvalidFieldException;
 import com.hcl.library.exceptions.IsbnException;
 import com.hcl.library.model.bo.AuthorBO;
@@ -130,8 +131,6 @@ public class BookService {
 	public void isbnIsCorrect(String isbn) throws IsbnException{
 		isbn = isbn.replace("-","");
 		
-		
-		
 		if(isbn.length()!=13) {
 			throw new IsbnException("Isbn have only 10 or 13 digits");
 		}
@@ -139,12 +138,17 @@ public class BookService {
 		if(!isbn.matches("\\d+")) {
 			throw new IsbnException("Isbn only can have digits");
 		}
-		
-		
 	}
 	
-	public void isBookCorrect(BookBO book) throws IsbnException{
 	
+	public void isStringFieldCorrect(String field) throws InvalidCharacterException{
+		if(!field.matches("[a-zA-Z0-9]")) {
+			throw new InvalidCharacterException("Invalid character");
+		}
+	}
+	
+	public void isBookCorrect(BookBO book) throws InvalidFieldException{
+			isStringFieldCorrect(book.getName());
 			isbnIsCorrect(book.getIsbn());
 		
 	}
