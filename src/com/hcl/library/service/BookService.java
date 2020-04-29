@@ -8,6 +8,7 @@ import com.hcl.library.dto.BookDto;
 import com.hcl.library.exceptions.InvalidCharacterException;
 import com.hcl.library.exceptions.InvalidFieldException;
 import com.hcl.library.exceptions.IsbnException;
+import com.hcl.library.exceptions.StatusBookException;
 import com.hcl.library.model.bo.AuthorBO;
 import com.hcl.library.model.bo.BookBO;
 import com.hcl.library.model.enums.StatusBook;
@@ -148,6 +149,14 @@ public class BookService {
 		}
 	}
 	
+	public void isStatusCorrect(StatusBook status) throws StatusBookException{
+		String statusValue= status.toString();
+		
+		if(!statusValue.equals("AVAILABLE")){
+			throw new StatusBookException(statusValue +" is not a valid status for a new book");
+		}
+	}
+	
 	public void isBookCorrect(BookBO book) throws InvalidFieldException{
 			isStringFieldCorrect(book.getName());
 			isbnIsCorrect(book.getIsbn());
@@ -155,7 +164,7 @@ public class BookService {
 			isStringFieldCorrect(book.getEditorial());
 			isStringFieldCorrect(book.getCategory());
 			isStringFieldCorrect(book.getLanguage());
-			
+			isStatusCorrect(book.getStatus());
 	}
 	
 	private BookPO getPersistenceBook(BookBO book) {
