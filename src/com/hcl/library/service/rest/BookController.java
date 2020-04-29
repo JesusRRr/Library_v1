@@ -16,7 +16,7 @@ import com.hcl.library.model.po.BookPO;
 import com.hcl.library.service.BookService;
 
 @Path("/books")
-public class BookServiceRest {
+public class BookController {
 	@GET
 	@Path("/")
 	public Response index() {
