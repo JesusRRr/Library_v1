@@ -142,7 +142,8 @@ public class BookService {
 	
 	
 	public void isStringFieldCorrect(String field) throws InvalidCharacterException{
-		if(!field.matches("[a-zA-Z0-9]")) {
+		field=field.replace(" ", "");
+		if(!field.matches("[a-zA-Z0-9]+")) {
 			throw new InvalidCharacterException("Invalid character at: "+field);
 		}
 	}
@@ -150,7 +151,11 @@ public class BookService {
 	public void isBookCorrect(BookBO book) throws InvalidFieldException{
 			isStringFieldCorrect(book.getName());
 			isbnIsCorrect(book.getIsbn());
-		
+			isStringFieldCorrect(book.getEdition());
+			isStringFieldCorrect(book.getEditorial());
+			isStringFieldCorrect(book.getCategory());
+			isStringFieldCorrect(book.getLanguage());
+			
 	}
 	
 	private BookPO getPersistenceBook(BookBO book) {
