@@ -143,7 +143,7 @@ public class BookService {
 	
 	public void isStringFieldCorrect(String field) throws InvalidCharacterException{
 		if(!field.matches("[a-zA-Z0-9]")) {
-			throw new InvalidCharacterException("Invalid character");
+			throw new InvalidCharacterException("Invalid character at: "+field);
 		}
 	}
 	
