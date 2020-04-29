@@ -70,6 +70,9 @@ public class BookServiceRest {
 			boolean isBookCreated =BookService.getInstance().createBook(libro);
 			BookBO bookFound =BookService.getInstance().findByIsbn(libro.getIsbn());
 			return Response.status(201).entity("{\"id\": "+bookFound.getId()+"}").build();
+		}catch(InvalidFieldException e) {
+			System.out.println(e.getMessage());
+			return Response.status(400).entity("{\"code\":\"400\",\"message\":\" "+ e.getMessage()+"\"}").build();
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 			return Response.status(500).entity("{\"code\":\"500\",\"message\":\" "+ e.getMessage()+"\"}").build();
