@@ -125,6 +125,14 @@ public class BookService {
 		book.setStatus(status);
 	}
 	
+	public boolean isbnIsCorrect(String isbn) {
+		
+		if(isbn.length()>10) {
+			return false;
+		}
+		return true;
+	}
+	
 	private BookPO getPersistenceBook(BookBO book) {
 		if(book!=null) {
 			return BookDto.map(book);
