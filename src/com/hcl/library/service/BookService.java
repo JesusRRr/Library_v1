@@ -5,7 +5,10 @@ import java.util.List;
 import com.hcl.library.dao.AuthorDao;
 import com.hcl.library.dao.BookDao;
 import com.hcl.library.dto.BookDto;
+import com.hcl.library.exceptions.InvalidCharacterException;
 import com.hcl.library.exceptions.InvalidFieldException;
+import com.hcl.library.exceptions.IsbnException;
+import com.hcl.library.exceptions.StatusBookException;
 import com.hcl.library.model.bo.AuthorBO;
 import com.hcl.library.model.bo.BookBO;
 import com.hcl.library.model.enums.StatusBook;
@@ -33,6 +36,7 @@ public class BookService {
 	}
 
 	public boolean createBook(BookBO book) throws InvalidFieldException{
+		isBookCorrect(book);
 		BookPO persistenceBook=getPersistenceBook(book);
 		BookBO bookFound = findByIsbn(persistenceBook.getIsbn());
 		if (bookFound == null) {
@@ -123,6 +127,44 @@ public class BookService {
 	
 	public void changeStatus(BookBO book, StatusBook status) {
 		book.setStatus(status);
+	}
+	
+	public void isbnIsCorrect(String isbn) throws IsbnException{
+		isbn = isbn.replace("-","");
+		
+		if(isbn.length()!=13) {
+			throw new IsbnException("Isbn have only 10 or 13 digits");
+		}
+		
+		if(!isbn.matches("\\d+")) {
+			throw new IsbnException("Isbn only can have digits");
+		}
+	}
+	
+	
+	public void isStringFieldCorrect(String field) throws InvalidCharacterException{
+		field=field.replace(" ", "");
+		if(!field.matches("[a-zA-Z0-9]+")) {
+			throw new InvalidCharacterException("Invalid character at: "+field);
+		}
+	}
+	
+	public void isStatusCorrect(StatusBook status) throws StatusBookException{
+		String statusValue= status.toString();
+		
+		if(!statusValue.equals("AVAILABLE")){
+			throw new StatusBookException(statusValue +" is not a valid status for a new book");
+		}
+	}
+	
+	public void isBookCorrect(BookBO book) throws InvalidFieldException{
+			isStringFieldCorrect(book.getName());
+			isbnIsCorrect(book.getIsbn());
+			isStringFieldCorrect(book.getEdition());
+			isStringFieldCorrect(book.getEditorial());
+			isStringFieldCorrect(book.getCategory());
+			isStringFieldCorrect(book.getLanguage());
+			isStatusCorrect(book.getStatus());
 	}
 	
 	private BookPO getPersistenceBook(BookBO book) {
