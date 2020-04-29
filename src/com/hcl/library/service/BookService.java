@@ -128,9 +128,16 @@ public class BookService {
 	}
 	
 	public void isbnIsCorrect(String isbn) throws IsbnException{
+		isbn = isbn.replace("-","");
 		
-		if(isbn.length()!=17) {
-			throw new IsbnException("Isbn have only 13 digits");
+		
+		
+		if(isbn.length()!=13) {
+			throw new IsbnException("Isbn have only 10 or 13 digits");
+		}
+		
+		if(!isbn.matches("\\d+")) {
+			throw new IsbnException("Isbn only can have digits");
 		}
 		
 		
