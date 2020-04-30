@@ -8,7 +8,7 @@ import com.hcl.library.dto.BookDto;
 import com.hcl.library.exceptions.InvalidCharacterException;
 import com.hcl.library.exceptions.InvalidFieldException;
 import com.hcl.library.exceptions.IsbnException;
-import com.hcl.library.exceptions.NoNameException;
+import com.hcl.library.exceptions.AuthorException;
 import com.hcl.library.exceptions.StatusBookException;
 import com.hcl.library.model.bo.AuthorBO;
 import com.hcl.library.model.bo.BookBO;
@@ -131,6 +131,10 @@ public class BookService {
 	}
 	
 	public void isbnIsCorrect(String isbn) throws IsbnException{
+		if(isbn==null) {
+			throw new IsbnException("Isbn can't be omitted");
+		}
+		
 		isbn = isbn.replace("-","");
 		System.out.println("isbn"+isbn);
 		
@@ -163,9 +167,10 @@ public class BookService {
 		}
 	}
 	
-	public void isAuthorCorrect(AuthorBO author) throws NoNameException{
+	public void isAuthorCorrect(AuthorBO author) throws AuthorException{
+		
 		if(author.getName().equals("") || author.getLastName().equals("")) {
-			throw new NoNameException("Author can't be assignated without a full name");
+			throw new AuthorException("Author can't be assignated without a full name");
 		}
 	}
 	
