@@ -8,6 +8,8 @@ import com.hcl.library.dto.BookDto;
 import com.hcl.library.exceptions.InvalidCharacterException;
 import com.hcl.library.exceptions.InvalidFieldException;
 import com.hcl.library.exceptions.IsbnException;
+import com.hcl.library.exceptions.AuthorException;
+import com.hcl.library.exceptions.EmptyFieldException;
 import com.hcl.library.exceptions.StatusBookException;
 import com.hcl.library.model.bo.AuthorBO;
 import com.hcl.library.model.bo.BookBO;
@@ -130,15 +132,18 @@ public class BookService {
 	}
 	
 	public void isbnIsCorrect(String isbn) throws IsbnException{
+		if(isbn==null) {
+			throw new IsbnException("Isbn can't be omitted");
+		}
+		
 		isbn = isbn.replace("-","");
-		System.out.println("isbn"+isbn);
 		
 		if(isbn.equals("")) {
 			throw new IsbnException("Isbn can't be omitted");
 		}
 		
 		if(isbn.length()!=13) {
-			throw new IsbnException("Isbn have 13 digits");
+			throw new IsbnException("Isbn has 13 digits");
 		}
 		
 		if(!isbn.matches("\\d+")) {
@@ -147,7 +152,11 @@ public class BookService {
 	}
 	
 	
-	public void isStringFieldCorrect(String field) throws InvalidCharacterException{
+	public void isStringFieldCorrect(String field, String attribute) throws InvalidFieldException{
+		System.out.println("field"+field);
+		if(field.equals("")) {
+			throw new EmptyFieldException("empty field: "+attribute);
+		}
 		field=field.replace(" ", "");
 		if(!field.matches("[a-zA-Z0-9]+")) {
 			throw new InvalidCharacterException("Invalid character at: "+field);
@@ -162,14 +171,36 @@ public class BookService {
 		}
 	}
 	
+	public void isAuthorCorrect(AuthorBO author) throws AuthorException{
+		
+		if(author.getName().equals("") || author.getLastName().equals("")) {
+			throw new AuthorException("Author can't be assignated without a full name");
+		}
+	}
+	
+	public void areAuthorsCorrect(List<AuthorBO> authors) throws InvalidFieldException{
+		
+		if(authors.size()==0) {
+			throw new AuthorException("Book can't be created without an Author");
+		}
+		for(AuthorBO author:authors) {
+			isAuthorCorrect(author);
+			isStringFieldCorrect(author.getName(),"Author name");
+			isStringFieldCorrect(author.getLastName(),"Author last name");
+			isStringFieldCorrect(author.getNacionality(),"nationality");
+		}
+	}
+
+	
 	public void isBookCorrect(BookBO book) throws InvalidFieldException{
-			isStringFieldCorrect(book.getName());
+			isStringFieldCorrect(book.getName(),"isbn");
 			isbnIsCorrect(book.getIsbn());
-			isStringFieldCorrect(book.getEdition());
-			isStringFieldCorrect(book.getEditorial());
-			isStringFieldCorrect(book.getCategory());
-			isStringFieldCorrect(book.getLanguage());
+			isStringFieldCorrect(book.getEdition(),"edition");
+			isStringFieldCorrect(book.getEditorial(),"editorial");
+			isStringFieldCorrect(book.getCategory(),"category");
+			isStringFieldCorrect(book.getLanguage(),"language");
 			isStatusCorrect(book.getStatus());
+			areAuthorsCorrect(book.getAuthors());
 	}
 	
 	private BookPO getPersistenceBook(BookBO book) {
