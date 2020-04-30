@@ -138,7 +138,7 @@ public class BookService {
 		}
 		
 		if(isbn.length()!=13) {
-			throw new IsbnException("Isbn have 13 digits");
+			throw new IsbnException("Isbn has 13 digits");
 		}
 		
 		if(!isbn.matches("\\d+")) {
@@ -162,6 +162,16 @@ public class BookService {
 		}
 	}
 	
+	public void areAuthorsCorrect(List<AuthorBO> authors) throws InvalidFieldException{
+		for(AuthorBO autor:authors) {
+			isStringFieldCorrect(autor.getName());
+			isStringFieldCorrect(autor.getLastName());
+			isStringFieldCorrect(autor.getNacionality());
+		}
+	}
+	
+	
+	
 	public void isBookCorrect(BookBO book) throws InvalidFieldException{
 			isStringFieldCorrect(book.getName());
 			isbnIsCorrect(book.getIsbn());
@@ -170,6 +180,7 @@ public class BookService {
 			isStringFieldCorrect(book.getCategory());
 			isStringFieldCorrect(book.getLanguage());
 			isStatusCorrect(book.getStatus());
+			areAuthorsCorrect(book.getAuthors());
 	}
 	
 	private BookPO getPersistenceBook(BookBO book) {
