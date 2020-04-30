@@ -8,6 +8,7 @@ import com.hcl.library.dto.BookDto;
 import com.hcl.library.exceptions.InvalidCharacterException;
 import com.hcl.library.exceptions.InvalidFieldException;
 import com.hcl.library.exceptions.IsbnException;
+import com.hcl.library.exceptions.NoNameException;
 import com.hcl.library.exceptions.StatusBookException;
 import com.hcl.library.model.bo.AuthorBO;
 import com.hcl.library.model.bo.BookBO;
@@ -162,15 +163,21 @@ public class BookService {
 		}
 	}
 	
-	public void areAuthorsCorrect(List<AuthorBO> authors) throws InvalidFieldException{
-		for(AuthorBO autor:authors) {
-			isStringFieldCorrect(autor.getName());
-			isStringFieldCorrect(autor.getLastName());
-			isStringFieldCorrect(autor.getNacionality());
+	public void isAuthorNameIn(AuthorBO author) throws NoNameException{
+		if(author.getName().equals("") && author.getLastName().equals("")) {
+			throw new NoNameException("Author can't be assignated without a full name");
 		}
 	}
 	
-	
+	public void areAuthorsCorrect(List<AuthorBO> authors) throws InvalidFieldException{
+		for(AuthorBO author:authors) {
+			isAuthorNameIn(author);
+			isStringFieldCorrect(author.getName());
+			isStringFieldCorrect(author.getLastName());
+			isStringFieldCorrect(author.getNacionality());
+		}
+	}
+
 	
 	public void isBookCorrect(BookBO book) throws InvalidFieldException{
 			isStringFieldCorrect(book.getName());
