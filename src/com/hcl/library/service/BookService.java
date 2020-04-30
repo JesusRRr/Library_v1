@@ -9,6 +9,7 @@ import com.hcl.library.exceptions.InvalidCharacterException;
 import com.hcl.library.exceptions.InvalidFieldException;
 import com.hcl.library.exceptions.IsbnException;
 import com.hcl.library.exceptions.AuthorException;
+import com.hcl.library.exceptions.EmptyFieldException;
 import com.hcl.library.exceptions.StatusBookException;
 import com.hcl.library.model.bo.AuthorBO;
 import com.hcl.library.model.bo.BookBO;
@@ -151,7 +152,11 @@ public class BookService {
 	}
 	
 	
-	public void isStringFieldCorrect(String field) throws InvalidCharacterException{
+	public void isStringFieldCorrect(String field, String attribute) throws InvalidFieldException{
+		System.out.println("field"+field);
+		if(field.equals("")) {
+			throw new EmptyFieldException("empty field: "+attribute);
+		}
 		field=field.replace(" ", "");
 		if(!field.matches("[a-zA-Z0-9]+")) {
 			throw new InvalidCharacterException("Invalid character at: "+field);
@@ -180,20 +185,20 @@ public class BookService {
 		}
 		for(AuthorBO author:authors) {
 			isAuthorCorrect(author);
-			isStringFieldCorrect(author.getName());
-			isStringFieldCorrect(author.getLastName());
-			isStringFieldCorrect(author.getNacionality());
+			isStringFieldCorrect(author.getName(),"Author name");
+			isStringFieldCorrect(author.getLastName(),"Author last name");
+			isStringFieldCorrect(author.getNacionality(),"nationality");
 		}
 	}
 
 	
 	public void isBookCorrect(BookBO book) throws InvalidFieldException{
-			isStringFieldCorrect(book.getName());
+			isStringFieldCorrect(book.getName(),"isbn");
 			isbnIsCorrect(book.getIsbn());
-			isStringFieldCorrect(book.getEdition());
-			isStringFieldCorrect(book.getEditorial());
-			isStringFieldCorrect(book.getCategory());
-			isStringFieldCorrect(book.getLanguage());
+			isStringFieldCorrect(book.getEdition(),"edition");
+			isStringFieldCorrect(book.getEditorial(),"editorial");
+			isStringFieldCorrect(book.getCategory(),"category");
+			isStringFieldCorrect(book.getLanguage(),"language");
 			isStatusCorrect(book.getStatus());
 			areAuthorsCorrect(book.getAuthors());
 	}
