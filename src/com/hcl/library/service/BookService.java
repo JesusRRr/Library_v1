@@ -136,7 +136,6 @@ public class BookService {
 		}
 		
 		isbn = isbn.replace("-","");
-		System.out.println("isbn"+isbn);
 		
 		if(isbn.equals("")) {
 			throw new IsbnException("Isbn can't be omitted");
@@ -175,6 +174,10 @@ public class BookService {
 	}
 	
 	public void areAuthorsCorrect(List<AuthorBO> authors) throws InvalidFieldException{
+		
+		if(authors.size()==0) {
+			throw new AuthorException("Book can't be created without an Author");
+		}
 		for(AuthorBO author:authors) {
 			isAuthorCorrect(author);
 			isStringFieldCorrect(author.getName());
