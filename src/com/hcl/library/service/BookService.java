@@ -163,15 +163,15 @@ public class BookService {
 		}
 	}
 	
-	public void isAuthorNameIn(AuthorBO author) throws NoNameException{
-		if(author.getName().equals("") && author.getLastName().equals("")) {
+	public void isAuthorCorrect(AuthorBO author) throws NoNameException{
+		if(author.getName().equals("") || author.getLastName().equals("")) {
 			throw new NoNameException("Author can't be assignated without a full name");
 		}
 	}
 	
 	public void areAuthorsCorrect(List<AuthorBO> authors) throws InvalidFieldException{
 		for(AuthorBO author:authors) {
-			isAuthorNameIn(author);
+			isAuthorCorrect(author);
 			isStringFieldCorrect(author.getName());
 			isStringFieldCorrect(author.getLastName());
 			isStringFieldCorrect(author.getNacionality());
