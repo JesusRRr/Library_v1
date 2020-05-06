@@ -66,9 +66,8 @@ public class BookService {
 		return bookFound;
 	}
 
-	public BookBO findByName(String name) {
-		BookPO bookFound=bookDao.find(bookDao.criteriaOfSearching(name,"getName"));
-		return getBusinessBook(bookFound);
+	public BookPO findByName(String name) {
+		return bookDao.find(bookDao.criteriaOfSearching(name,"getName"));
 	}
 	
 	public BookBO findByIsbn(String isbn) {

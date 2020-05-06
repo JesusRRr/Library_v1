@@ -47,6 +47,11 @@ public class AuthorService {
 		List<AuthorPO> authorsFound = authorDao.findAll(authorDao.criteriaOfSearching(nacionality, "getNacionality"));
 		return getBusinessList(authorsFound);
 	}
+	
+	public List<AuthorPO> findAll(){
+		List<AuthorPO> authorsFound= authorDao.findAll();
+		return authorsFound;
+	}
 
 	protected AuthorPO getPersistenceAuthor(AuthorBO author) {
 		if(author!=null) {
