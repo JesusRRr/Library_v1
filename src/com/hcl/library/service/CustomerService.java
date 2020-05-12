@@ -1,5 +1,6 @@
 package com.hcl.library.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -40,6 +41,14 @@ public class CustomerService {
 		} else {
 			return false;
 		}
+	}
+	
+	public List<CustomerPO> findAll(){
+		List<CustomerPO> customersFound= customerDao.findAll();
+		if(customersFound!=null) {
+			return customersFound;
+		}
+		return null;
 	}
 	
 	private CustomerPO getPersistenceCustomer(CustomerBO customer) {
