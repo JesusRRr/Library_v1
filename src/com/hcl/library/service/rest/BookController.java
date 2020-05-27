@@ -59,6 +59,18 @@ public class BookController {
 		}
 		
 	}
+	@POST
+	@Path("/works")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response isWorking(String name) {
+		System.out.println(name);
+		if(name.equals("error")) {
+			return Response.status(500).entity("error").build();
+		}else {
+			return Response.status(201).entity("Hello " + name+" your app is working").build();
+		}
+		}
 	
 	@POST
 	@Path("/newbook")

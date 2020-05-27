@@ -1,5 +1,8 @@
 package com.hcl.library.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.hcl.library.model.bo.CustomerBO;
 import com.hcl.library.model.po.CustomerPO;
 
@@ -35,4 +38,23 @@ public class CustomerDto {
 		
 		return customer;
 	}
+	
+	public static final List<CustomerBO> map(List<CustomerPO> persistenceCustomers) {
+		
+		return persistenceCustomers.stream().map( persistenceCustomer->{
+		CustomerBO customer = new CustomerBO();
+		customer.setId(persistenceCustomer.getId());
+		customer.setName(persistenceCustomer.getName());
+		customer.setLastName(persistenceCustomer.getLastName());
+		customer.setBirthday(persistenceCustomer.getBirthday());
+		customer.setCurp(persistenceCustomer.getCurp());
+		customer.setPhone(persistenceCustomer.getPhone());
+		customer.setEmail(persistenceCustomer.getEmail());
+		customer.setAddress(AddressDto.map(persistenceCustomer.getAddress()));
+	
+		return customer;
+		})
+				.collect(Collectors.toList());
+	}
+	
 }

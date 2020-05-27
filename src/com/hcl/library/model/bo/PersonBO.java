@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+
 public class PersonBO {
 	private int id;
 	private String name;
@@ -18,5 +18,13 @@ public class PersonBO {
 	
 	public String getFullName() {
 		return this.getName()+this.getLastName();
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder(this.getName())
+				.append(" ")
+				.append(this.getLastName()
+		).toString();
 	}
 }

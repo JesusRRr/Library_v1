@@ -43,10 +43,10 @@ public class CustomerService {
 		}
 	}
 	
-	public List<CustomerPO> findAll(){
+	public List<CustomerBO> findAll(){
 		List<CustomerPO> customersFound= customerDao.findAll();
 		if(customersFound!=null) {
-			return customersFound;
+			return getBusinessCustomers(customersFound);
 		}
 		return null;
 	}
@@ -81,6 +81,14 @@ public class CustomerService {
 	private CustomerBO getBusinessCustomer(CustomerPO customer) {
 		if(customer!=null) {
 			return CustomerDto.map(customer);
+		}else {
+			return null;
+		}
+	}
+	
+	private List<CustomerBO> getBusinessCustomers(List<CustomerPO> customers) {
+		if(customers!=null) {
+			return CustomerDto.map(customers);
 		}else {
 			return null;
 		}

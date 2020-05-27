@@ -44,6 +44,12 @@ public class StaffService {
 		return getBusinessStaff(staffFound);
 	}
 	
+	public boolean checkPassword(String userName, String password) {
+		
+		return findByUserName(userName).getPassword().equals(password);
+		
+	}
+	
 	private StaffPO getPersistenceStaff(StaffBO staff) {
 		if(staff!=null) {
 			return StaffDto.map(staff);

@@ -192,7 +192,7 @@ public class BookService {
 
 	
 	public void isBookCorrect(BookBO book) throws InvalidFieldException{
-			isStringFieldCorrect(book.getName(),"isbn");
+			isStringFieldCorrect(book.getName(),"name");
 			isbnIsCorrect(book.getIsbn());
 			isStringFieldCorrect(book.getEdition(),"edition");
 			isStringFieldCorrect(book.getEditorial(),"editorial");
