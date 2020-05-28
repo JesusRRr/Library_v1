@@ -1,6 +1,7 @@
 package com.hcl.library.model.bo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hcl.library.model.enums.StatusLoan;
@@ -18,7 +19,7 @@ public class LoanBO {
 	private LocalDate dateOfLoan;
 	private LocalDate returnDate;
 	private StatusLoan status;
-	private List<BookBO> books;
+	private List<BookBO> books=new ArrayList<>();
 	
 	
 }
