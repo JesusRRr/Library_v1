@@ -64,6 +64,18 @@ public class LoanService {
 		}
 		return null;
 	}
+	public void createLoan(LoanBO loan) {
+		
+		LoanPO persistenceLoan =getPersistenceLoan(fillAllLoanInfoRequired(loan));
+		loanDao.create(persistenceLoan);
+	}
+	
+	public LoanBO fillAllLoanInfoRequired(LoanBO loan) {
+		loan.setStatus(StatusLoan.Active);
+		loan.setDateOfLoan(LocalDate.now());
+		loan.setReturnDate(LocalDate.now().plusDays(10));
+		return loan;
+	}
 
 	public int createLoan(Loan loan) throws LoanException {
 		LoanBO loanBO = fillAllLoanInfoRequired(loan);
@@ -189,6 +201,22 @@ public class LoanService {
 
 		return loanBO;
 
+	}
+	
+	private LoanPO getPersistenceLoan(LoanBO loan) {
+		if(loan!=null) {
+			return LoanDTO.map(loan);
+		}else {
+			return null;
+		}
+	}
+	
+	private LoanBO getBusinessLoan(LoanPO loan) {
+		if(loan!=null) {
+			return LoanDTO.map(loan);
+		}else {
+			return null;
+		}
 	}
 
 }
