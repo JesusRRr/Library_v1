@@ -70,12 +70,12 @@ public class CustomerService {
 		return getBusinessCustomer(customerFound);
 	}
 	
-	public CustomerPO findByCurp(String curp)throws CustomerDoesNotExistsException {
+	public CustomerBO findByCurp(String curp)throws CustomerDoesNotExistsException {
 		CustomerPO customer = customerDao.find(customerDao.criteriaOfSearching(curp, "getCurp"));
 		if(customer == null) {
 			throw new CustomerDoesNotExistsException("The customer with curp: "+curp+" does not exists");
 		}
-		return customer;
+		return getBusinessCustomer(customer);
 	}
 	
 	private CustomerBO getBusinessCustomer(CustomerPO customer) {

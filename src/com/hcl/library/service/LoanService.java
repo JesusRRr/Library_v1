@@ -187,7 +187,7 @@ public class LoanService {
 	private LoanBO fillAllLoanInfoRequired(Loan loan) throws LoanException {
 		LoanBO loanBO = new LoanBO();
 		try {
-			loanBO.setCustomer(CustomerDto.map(customerService.findByCurp(loan.getCustomerCurp())));
+			loanBO.setCustomer(customerService.findByCurp(loan.getCustomerCurp()));
 			loanBO.setStaff(staffService.findByUserName(loan.getStaffUsername()));
 			loanBO.setBooks(loan.getBooks().stream().map(book -> BookDto.map(bookService.findById(book)))
 					.collect(Collectors.toList()));
